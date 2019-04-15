@@ -41,8 +41,12 @@ class WxappUser(http.Controller, BaseController):
             return self.res_err(-1, e.name)
 
     @http.route('/<string:sub_domain>/user/wxapp/login', auth='public', methods=['POST'])
-    def login(self, sub_domain, code=None, **kwargs):
+    def login(self, sub_domain, **kwargs):
         try:
+            value = request.httprequest.stream.read()
+
+            code = value['code']
+
             ret, entry = self._check_domain(sub_domain)
             if ret:return ret
 
@@ -64,7 +68,6 @@ class WxappUser(http.Controller, BaseController):
             open_id = session_info['openid']
             wechat_user = request.env(user=1)['wxapp.user'].search([
                 ('open_id', '=', open_id),
-                #('create_uid', '=', user.id)
             ])
             if not wechat_user:
                 return self.res_err(10000)
