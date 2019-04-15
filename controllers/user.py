@@ -40,7 +40,7 @@ class WxappUser(http.Controller, BaseController):
             _logger.exception(e)
             return self.res_err(-1, e.name)
 
-    @http.route('/<string:sub_domain>/user/wxapp/login', auth='public', methods=['GET'])
+    @http.route('/<string:sub_domain>/user/wxapp/login', auth='public', methods=['POST'])
     def login(self, sub_domain, code=None, **kwargs):
         try:
             ret, entry = self._check_domain(sub_domain)
