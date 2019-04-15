@@ -96,7 +96,7 @@ class WxappUser(http.Controller, BaseController):
             return self.res_err(-1, e.name)
 
 
-    @http.route('/<string:sub_domain>/user/wxapp/register/complex', auth='public', methods=['GET'])
+    @http.route('/<string:sub_domain>/user/wxapp/register/complex', auth='public', methods=['POST'], csrf=False, type='http')
     def register(self, sub_domain, code=None, encryptedData=None, iv=None, **kwargs):
         '''
         用户注册

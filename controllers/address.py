@@ -137,7 +137,7 @@ class WxappAddress(http.Controller, BaseController):
             return self.res_err(-1, e.name)
 
 
-    @http.route('/<string:sub_domain>/user/shipping-address/delete', auth='public', methods=['GET'])
+    @http.route('/<string:sub_domain>/user/shipping-address/delete', auth='public', methods=['POST'], csrf=False, type='http')
     def delete(self, sub_domain, token=None, id=None, **kwargs):
         address_id = id
         try:

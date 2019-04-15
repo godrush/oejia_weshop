@@ -62,7 +62,7 @@ class WxappProduct(http.Controller, BaseController):
         }
         return _dict
 
-    @http.route('/<string:sub_domain>/shop/goods/list', auth='public', methods=['GET'])
+    @http.route('/<string:sub_domain>/shop/goods/list', auth='public', methods=['POST'], csrf=False, type='http')
     def list(self, sub_domain, categoryId=False, nameLike=False, page=1, pageSize=20, **kwargs):
         page = int(page)
         pageSize = int(pageSize)
@@ -90,7 +90,7 @@ class WxappProduct(http.Controller, BaseController):
             return self.res_err(-1, e.name)
 
 
-    @http.route('/<string:sub_domain>/shop/goods/detail', auth='public', methods=['GET'])
+    @http.route('/<string:sub_domain>/shop/goods/detail', auth='public', methods=['POST'], csrf=False, type='http')
     def detail(self, sub_domain, id=False, code=False, **kwargs):
         goods_id = id
         try:
