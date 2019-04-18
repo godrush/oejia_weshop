@@ -29,7 +29,7 @@ class WxappScore(http.Controller, BaseController):
             _logger.exception(e)
             return self.res_err(-1, e.name)
 
-    @http.route('/<string:sub_domain>/shop/goods/kanjia/list', auth='public', methods=['POST'], csrf=False, type='http')
+    @http.route('/<string:sub_domain>/shop/goods/kanjia/list', auth='public', methods=['GET'])
     def kanjia_list(self, sub_domain, **kwargs):
         try:
             ret, entry = self._check_domain(sub_domain)
