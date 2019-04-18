@@ -16,10 +16,10 @@ _logger = logging.getLogger(__name__)
 class WxappScore(http.Controller, BaseController):
 
     @http.route('/<string:sub_domain>/score/send/rule', auth='public', methods=['POST'], scrf=False, type='http')
-    def list(self, sub_domain, code=5, **kwargs):
+    def list(self, sub_domain, **kwargs):
         try:
             ret, entry = self._check_domain(sub_domain)
-            if ret:return ret
+            if ret: return ret
 
             data = []
 
@@ -33,7 +33,7 @@ class WxappScore(http.Controller, BaseController):
     def kanjia_list(self, sub_domain, **kwargs):
         try:
             ret, entry = self._check_domain(sub_domain)
-            if ret:return ret
+            if ret: return ret
 
             data = []
 
@@ -47,7 +47,7 @@ class WxappScore(http.Controller, BaseController):
     def coupons(self, sub_domain, type=None, **kwargs):
         try:
             ret, entry = self._check_domain(sub_domain)
-            if ret:return ret
+            if ret: return ret
 
             data = []
 
@@ -61,7 +61,7 @@ class WxappScore(http.Controller, BaseController):
     def reputation(self, sub_domain, goodsId=None, **kwargs):
         try:
             ret, entry = self._check_domain(sub_domain)
-            if ret:return ret
+            if ret: return ret
 
             data = []
 

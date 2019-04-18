@@ -90,7 +90,7 @@ class WxappProduct(http.Controller, BaseController):
             return self.res_err(-1, e.name)
 
 
-    @http.route('/<string:sub_domain>/shop/goods/detail', auth='public', methods=['POST'], csrf=False, type='http')
+    @http.route('/<string:sub_domain>/shop/goods/detail', auth='public', methods=['GET'])
     def detail(self, sub_domain, id=False, code=False, **kwargs):
         goods_id = id
         try:

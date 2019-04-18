@@ -71,7 +71,6 @@ class WxappUser(http.Controller, BaseController):
             wechat_user.write({'last_login': fields.Datetime.now(), 'ip': request.httprequest.remote_addr})
             access_token = request.env(user=1)['wxapp.access_token'].search([
                 ('open_id', '=', open_id),
-                #('create_uid', '=', user.id)
             ])
 
             if not access_token:
