@@ -207,7 +207,7 @@ class WxappAddress(http.Controller, BaseController):
             return self.res_err(-1, e.name)
 
     @http.route('/common/region/v2/province', auth='public', methods=['GET'])
-    def get_province(self, sub_domain, token=None, **kwargs):
+    def get_province(self, token=None, **kwargs):
         try:
             province = http.request.env(user=1)['oe.province'].search_read(fields=['id', 'name'])
             return self.res_ok(province)
@@ -217,7 +217,7 @@ class WxappAddress(http.Controller, BaseController):
             return self.res_err(-1, e.name)
 
     @http.route('/common/region/v2/child', auth='public', methods=['GET'])
-    def get_region_child(self, sub_domain, token=None, **kwargs):
+    def get_region_child(self, token=None, **kwargs):
         try:
             if kwargs['pid'][-4:] == '0000':
                 city = http.request.env(user=1)['oe.city'].search_read(domain=[('pid', '=', int(kwargs['pid']))],
