@@ -55,8 +55,7 @@ class WxappMessage(http.Controller, BaseController):
 
     @http.route('/<string:sub_domain>/template-msg/wxa/formId', auth='public', methods=['POST'], csrf=False, type='http')
     def save_template_msg(self, sub_domain, **kwargs):
-        # https://www.it120.cc/apis/92
-        # https://github.com/EastWorld/wechat-app-mall/blob/master/app.js
+        # https://www.showdoc.cc/page/edit/342521884813587/1997822036233391
         try:
             _logger.info('>>> kwargs: %s' % kwargs)
             token = kwargs.get('token', None)
