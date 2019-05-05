@@ -84,11 +84,8 @@ class BaseController(object):
 
         return None, wechat_user, wxapp_entry
 
-
     def res_ok(self, data=None):
-        ret = {'code': 0, 'msg': 'success'}
-        if data:
-            ret['data'] = data
+        ret = {'code': 0, 'msg': 'success', 'data': data}
         return request.make_response(
             headers={'Content-Type': 'json'},
             data=json.dumps(ret, default=json_default)
