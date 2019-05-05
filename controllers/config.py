@@ -13,7 +13,6 @@ import logging
 _logger = logging.getLogger(__name__)
 
 
-
 class WxappConfig(http.Controller, BaseController):
 
     @http.route('/<string:sub_domain>/config/get-value', auth='public', methods=['GET'])

@@ -206,3 +206,22 @@ class WxappAddress(http.Controller, BaseController):
         except Exception as e:
             _logger.exception(e)
             return self.res_err(-1, e.name)
+
+
+    @http.route('/<string:sub_domain>/common/region/v2/province', auth='public', methods=['GET'])
+    def get_province(self, sub_domain, token=None, id=None, **kwargs):
+        try:
+            ret, entry = self._check_domain(sub_domain)
+            if ret: return ret
+
+            province = http.request.env(user=1)['oe.province'].search_read([()],['id', 'name'])
+            if province:
+                return self.res_err(province)
+            else:
+                return self.res_err(404)
+
+        except Exception as e:
+            _logger.exception(e)
+            return self.res_err(-1, e.name)
+
+
