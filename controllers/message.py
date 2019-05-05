@@ -53,5 +53,21 @@ class WxappMessage(http.Controller, BaseController):
             _logger.exception(e)
             return self.res_err(-1, e.name)
 
+    @http.route('/<string:sub_domain>/template-msg/wxa/formId', auth='public', methods=['POST'], csrf=False, type='http')
+    def save_template_msg(self, sub_domain, **kwargs):
+        # https://www.it120.cc/apis/92
+        # https://github.com/EastWorld/wechat-app-mall/blob/master/app.js
+        try:
+            _logger.info('>>> kwargs: %s' % kwargs)
+            token = kwargs.get('token', None)
+
+            res, wechat_user, entry = self._check_user(sub_domain, token)
+            if res: return res
+
+            return self.res_ok()
+
+        except Exception as e:
+            _logger.exception(e)
+            return self.res_err(-1, e.name)
 
 
