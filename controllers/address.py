@@ -206,30 +206,19 @@ class WxappAddress(http.Controller, BaseController):
             _logger.exception(e)
             return self.res_err(-1, e.name)
 
-    @http.route('/<string:sub_domain>/common/region/v2/province', auth='public', methods=['GET'])
+    @http.route('/common/region/v2/province', auth='public', methods=['GET'])
     def get_province(self, sub_domain, token=None, **kwargs):
         try:
-            ret, entry = self._check_domain(sub_domain)
-            if ret:
-                return ret
-
             province = http.request.env(user=1)['oe.province'].search_read(fields=['id', 'name'])
-
-            if province:
-                return self.res_ok(province)
-            else:
-                return self.res_err(404)
+            return self.res_ok(province)
 
         except Exception as e:
             _logger.exception(e)
             return self.res_err(-1, e.name)
 
-    @http.route('/<string:sub_domain>/common/region/v2/child', auth='public', methods=['GET'])
+    @http.route('/common/region/v2/child', auth='public', methods=['GET'])
     def get_region_child(self, sub_domain, token=None, **kwargs):
         try:
-            ret, entry = self._check_domain(sub_domain)
-            if ret:
-                return ret
             if kwargs['pid'][-4:] == '0000':
                 city = http.request.env(user=1)['oe.city'].search_read(domain=[('pid', '=', int(kwargs['pid']))],
                                                                        fields=['id', 'name'])
