@@ -19,7 +19,7 @@ class WxappAddress(http.Controller, BaseController):
     def user_amount(self, sub_domain, token=None):
         try:
             res, wechat_user, entry = self._check_user(sub_domain, token)
-            if res:return res
+            if res: return res
             _data = {
                 'balance': 0,
                 'score': 0,
@@ -57,26 +57,27 @@ class WxappAddress(http.Controller, BaseController):
     def list(self, sub_domain, token=None):
         try:
             res, wechat_user, entry = self._check_user(sub_domain, token)
-            if res:return res
+            if res: return res
 
             if not wechat_user.address_ids:
                 return self.res_err(700)
 
-            data = [self._get_address_dict(each_address, wechat_user.id) for each_address in wechat_user.address_ids.filtered(lambda r: r.active)]
+            data = [self._get_address_dict(each_address, wechat_user.id) for each_address in
+                    wechat_user.address_ids.filtered(lambda r: r.active)]
             return self.res_ok(data)
 
         except Exception as e:
             _logger.exception(e)
             return self.res_err(-1, e.name)
 
-
-    @http.route('/<string:sub_domain>/user/shipping-address/add', auth='public', methods=['GET','POST'], csrf=False, type='http')
+    @http.route('/<string:sub_domain>/user/shipping-address/add', auth='public', methods=['GET', 'POST'], csrf=False,
+                type='http')
     def add(self, sub_domain, **kwargs):
         try:
             token = kwargs.get('token', None)
 
             res, wechat_user, entry = self._check_user(sub_domain, token)
-            if res:return res
+            if res: return res
 
             new_address = request.env(user=1)['res.partner'].create({
                 'parent_id': wechat_user.partner_id.id,
@@ -101,14 +102,14 @@ class WxappAddress(http.Controller, BaseController):
             _logger.exception(e)
             return self.res_err(-1, e.name)
 
-
-    @http.route('/<string:sub_domain>/user/shipping-address/update', auth='public', methods=['GET','POST'], csrf=False, type='http')
+    @http.route('/<string:sub_domain>/user/shipping-address/update', auth='public', methods=['GET', 'POST'], csrf=False,
+                type='http')
     def update(self, sub_domain, **kwargs):
         try:
             token = kwargs.get('token', None)
 
             res, wechat_user, entry = self._check_user(sub_domain, token)
-            if res:return res
+            if res: return res
 
             address = request.env(user=1)['res.partner'].browse(int(kwargs['id']))
 
@@ -136,13 +137,13 @@ class WxappAddress(http.Controller, BaseController):
             _logger.exception(e)
             return self.res_err(-1, e.name)
 
-
-    @http.route('/<string:sub_domain>/user/shipping-address/delete', auth='public', methods=['POST'], csrf=False, type='http')
+    @http.route('/<string:sub_domain>/user/shipping-address/delete', auth='public', methods=['POST'], csrf=False,
+                type='http')
     def delete(self, sub_domain, token=None, id=None, **kwargs):
         address_id = id
         try:
             res, wechat_user, entry = self._check_user(sub_domain, token)
-            if res:return res
+            if res: return res
 
             if not address_id:
                 return self.res_err(300)
@@ -163,12 +164,11 @@ class WxappAddress(http.Controller, BaseController):
             _logger.exception(e)
             return self.res_err(-1, e.name)
 
-
     @http.route('/<string:sub_domain>/user/shipping-address/default', auth='public', methods=['GET'])
     def default(self, sub_domain, token=None, **kwargs):
         try:
             res, wechat_user, entry = self._check_user(sub_domain, token)
-            if res:return res
+            if res: return res
 
             address = request.env(user=1)['res.partner'].search([
                 ('parent_id', '=', wechat_user.partner_id.id),
@@ -185,13 +185,12 @@ class WxappAddress(http.Controller, BaseController):
             _logger.exception(e)
             return self.res_err(-1, e.name)
 
-
     @http.route('/<string:sub_domain>/user/shipping-address/detail', auth='public', methods=['GET'])
     def detail(self, sub_domain, token=None, id=None, **kwargs):
         address_id = id
         try:
             res, wechat_user, entry = self._check_user(sub_domain, token)
-            if res:return res
+            if res: return res
 
             if not address_id:
                 return self.res_err(300)
@@ -207,14 +206,15 @@ class WxappAddress(http.Controller, BaseController):
             _logger.exception(e)
             return self.res_err(-1, e.name)
 
-
     @http.route('/<string:sub_domain>/common/region/v2/province', auth='public', methods=['GET'])
-    def get_province(self, sub_domain, token=None, id=None, **kwargs):
+    def get_province(self, sub_domain, token=None, **kwargs):
         try:
             ret, entry = self._check_domain(sub_domain)
-            if ret: return ret
+            if ret:
+                return ret
 
-            province = http.request.env(user=1)['oe.province'].search_read([()],['id', 'name'])
+            province = http.request.env(user=1)['oe.province'].search_read([()], ['id', 'name'])
+
             if province:
                 return self.res_err(province)
             else:
@@ -223,5 +223,3 @@ class WxappAddress(http.Controller, BaseController):
         except Exception as e:
             _logger.exception(e)
             return self.res_err(-1, e.name)
-
-
