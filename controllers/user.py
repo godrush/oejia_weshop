@@ -228,7 +228,8 @@ class WxappUser(http.Controller, BaseController):
                 return res
 
             base = {
-                'mobile': wechat_user.mobile
+                'mobile': wechat_user.mobile,
+                'isSeller': wechat_user.is_seller,
             }
 
             ext = {}

@@ -32,6 +32,8 @@ class WxappUser(models.Model):
     partner_id = fields.Many2one('res.partner', required=True, ondelete='restrict', string='关联联系人', auto_join=True) #
     address_ids = fields.One2many('res.partner', compute='_compute_address_ids', string='收货地址')
 
+    is_seller = fields.Boolean(string='是否分销商', default=False)
+
     _sql_constraints = [(
         'wxapp_user_union_id_unique',
         'UNIQUE (union_id, create_uid)',
