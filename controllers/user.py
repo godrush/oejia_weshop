@@ -209,10 +209,34 @@ class WxappUser(http.Controller, BaseController):
 
             crypt = WXBizDataCrypt(app_id, access_token.session_key)
             user_info = crypt.decrypt(encrypted_data, iv)
-            _logger.info('user_info_phone:%s'%user_info['phoneNumber'])
             wechat_user.write({'mobile': user_info['phoneNumber']})
 
             return self.res_ok()
+
+        except Exception as e:
+            _logger.exception(e)
+            return self.res_err(-1, e.name)
+
+    @http.route('/<string:sub_domain>/user/detail', auth='public', methods=['GET'])
+    def get_user_detail(self, sub_domain, token=None, **kwargs):
+        '''
+        获取用户详情,目前仅限手机号码
+        '''
+        try:
+            res, wechat_user, entry = self._check_user(sub_domain, token)
+            if res:
+                return res
+
+            base = wechat_user.read(fields=['mobile'])
+
+            ext = {}
+
+            data = {
+                'base': base,
+                'ext': ext,
+            }
+
+            return self.res_ok(data)
 
         except Exception as e:
             _logger.exception(e)
