@@ -209,7 +209,7 @@ class WxappUser(http.Controller, BaseController):
 
             crypt = WXBizDataCrypt(app_id, access_token.session_key)
             user_info = crypt.decrypt(encrypted_data, iv)
-
+            _logger.info('user_info_phone:%s'%user_info['phoneNumber'])
             wechat_user.write({'mobile': user_info['phoneNumber']})
 
             return self.res_ok()
