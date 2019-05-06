@@ -56,6 +56,7 @@ class WxappMessage(http.Controller, BaseController):
     @http.route('/<string:sub_domain>/template-msg/wxa/formId', auth='public', methods=['POST'], csrf=False, type='http')
     def save_template_msg(self, sub_domain, **kwargs):
         # https://www.showdoc.cc/page/edit/342521884813587/1997822036233391
+        # 保存微信消息模版，该接口暂时留空
         try:
             _logger.info('>>> kwargs: %s' % kwargs)
             token = kwargs.get('token', None)

@@ -11,6 +11,7 @@ from .base import BaseController
 from .tools import get_wx_session_info, get_wx_user_info
 
 import logging
+from weixin.lib.wxcrypt import WXBizDataCrypt
 
 _logger = logging.getLogger(__name__)
 
@@ -132,6 +133,86 @@ class WxappUser(http.Controller, BaseController):
 
         except AttributeError:
             return self.res_err(404)
+
+        except Exception as e:
+            _logger.exception(e)
+            return self.res_err(-1, e.name)
+
+    @http.route('/<string:sub_domain>/user/wxapp/register/complex', auth='public', methods=['POST'], csrf=False,
+                type='http')
+    def register(self, sub_domain, code=None, encryptedData=None, iv=None, **kwargs):
+        '''
+        用户注册
+        '''
+        try:
+            ret, entry = self._check_domain(sub_domain)
+            if ret: return ret
+
+            config = request.env['wxapp.config'].sudo()
+
+            encrypted_data = encryptedData
+            if not code or not encrypted_data or not iv:
+                return self.res_err(300)
+
+            app_id = config.get_config('app_id', sub_domain)
+            secret = config.get_config('secret', sub_domain)
+
+            if not app_id or not secret:
+                return self.res_err(404)
+
+            session_key, user_info = get_wx_user_info(app_id, secret, code, encrypted_data, iv)
+            request.env(user=1)['wxapp.user'].create({
+                'name': user_info['nickName'],
+                'open_id': user_info['openId'],
+                'gender': user_info['gender'],
+                'language': user_info['language'],
+                'country': user_info['country'],
+                'province': user_info['province'],
+                'city': user_info['city'],
+                'avatar_url': user_info['avatarUrl'],
+                'register_ip': request.httprequest.remote_addr,
+            })
+            return self.res_ok()
+
+        except AttributeError:
+            return self.res_err(404)
+
+        except Exception as e:
+            _logger.exception(e)
+            return self.res_err(-1, e.name)
+
+    @http.route('/<string:sub_domain>/user/wxapp/bindMobile', auth='public', methods=['POST'], csrf=False,
+                type='http')
+    def bind_mobile(self, sub_domain, token=None, encryptedData=None, iv=None, **kwargs):
+        '''
+        绑定手机号码
+        '''
+        try:
+            res, wechat_user, entry = self._check_user(sub_domain, token)
+            if res:
+                return res
+
+            access_token = request.env(user=1)['wxapp.access_token'].search([
+                ('token', '=', token),
+            ])
+            config = request.env['wxapp.config'].sudo()
+
+            encrypted_data = encryptedData
+            if not encrypted_data or not iv:
+                return self.res_err(300)
+
+            app_id = config.get_config('app_id', sub_domain)
+            secret = config.get_config('secret', sub_domain)
+
+            if not app_id or not secret:
+                return self.res_err(404)
+
+            crypt = WXBizDataCrypt(app_id, access_token.session_key)
+            user_info = crypt.decrypt(encrypted_data, iv)
+
+            wechat_user.write({'mobile': user_info['phoneNumber']})
+
+            return self.res_ok()
 
         except Exception as e:
             _logger.exception(e)
