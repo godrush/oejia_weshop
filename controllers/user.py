@@ -227,7 +227,9 @@ class WxappUser(http.Controller, BaseController):
             if res:
                 return res
 
-            base = wechat_user.read(fields=['mobile'])
+            base = {
+                'mobile': wechat_user.mobile
+            }
 
             ext = {}
 
